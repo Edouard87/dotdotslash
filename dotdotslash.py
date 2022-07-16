@@ -58,8 +58,7 @@ def forloop():
             for bvar in befvar:
                 for word in match.keys():
                     rewrite = bvar + (var * count) + word
-                    fullrewrite = re.sub(arguments.string, rewrite, arguments.url)
-
+                    fullrewrite = arguments.url.replace(arguments.string, rewrite)
                     if fullrewrite not in duplicate:
                         req = request()
                         req.query(fullrewrite)

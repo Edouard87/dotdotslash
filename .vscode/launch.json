@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "inputs": [
+        {
+            "description": "URL of Target",
+            "id": "url",
+            "type": "promptString"
+        },
+        {
+            "description": "string within url to replace",
+            "id": "str",
+            "type": "promptString"
+        }
+    ],
+    "configurations": [
+        {
+            "name": "Python: Run Tests",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Run App",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/dotdotslash.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--url=${input:url}",
+                "--string=${input:str}"
+            ],
+            "justMyCode": false
+        }
+    ]
+}

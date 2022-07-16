@@ -1,6 +1,11 @@
 # dotdotslash
 An tool to help you search for Directory Traversal Vulnerabilities
 
+# Note
+
+This is a fork of the original package available at:
+This was adapted to work on python 3.10.5.
+
 # Benchmarks
 Platforms that I tested to validate tool efficiency:
 * [DVWA](https://github.com/ethicalhack3r/DVWA) (low/medium/high)

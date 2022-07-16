@@ -71,21 +71,19 @@ dotvar = (
 )
 
 match = {
-# Windows
-"c:\\boot.ini": "boot\W*loader",
-"c:\windows\system32\drivers\hosts": "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[ \t]+[a-zA-Z0-9-_.]*",
-
-# Linux
-"etc/hosts": "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[ \t][a-zA-Z0-9-_.]*",
-"etc/passwd": "\w*\:\w\:[0-9]*\:[0-9]*\:[a-zA-Z_-]*\:[\/a-zA-Z0-9]*[ \t]+:[\/a-zA-Z0-9]*",
-# TODO
-#"etc/group": "\w+\:\w\:[0-9]\:(|[a-z,]*)",
-
-# Apache
-".htaccess": "AccessFileName|RewriteEngine|allow from all|deny from all|DirectoryIndex|AuthUserFile|AuthGroupFile",
-
-# PHP
-# http://php.net/manual/pt_BR/reserved.variables.php
-"login.php": "\<\?php|\$_GET|\$_POST|\$_COOKIE|\$_REQUEST|\$_FILES|\$_SESSION|\$_SERVER|\$_ENV",
-"index.php": "\<\?php|\$_GET|\$_POST|\$_COOKIE|\$_REQUEST|\$_FILES|\$_SESSION|\$_SERVER|\$_ENV",
+    "windows": {
+        "c:\\boot.ini": "boot\W*loader",
+        "c:\windows\system32\drivers\hosts": "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[ \t]+[a-zA-Z0-9-_.]*",
+    },
+    "linux": {
+        "etc/hosts": "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[ \t][a-zA-Z0-9-_.]*",
+        "etc/passwd": "\w*\:\w\:[0-9]*\:[0-9]*\:[a-zA-Z_-]*\:[\/a-zA-Z0-9]*[ \t]+:[\/a-zA-Z0-9]*",
+    },
+    "apache": {
+        ".htaccess": "AccessFileName|RewriteEngine|allow from all|deny from all|DirectoryIndex|AuthUserFile|AuthGroupFile",
+    },
+    "php": {
+        "login.php": "\<\?php|\$_GET|\$_POST|\$_COOKIE|\$_REQUEST|\$_FILES|\$_SESSION|\$_SERVER|\$_ENV",
+        "index.php": "\<\?php|\$_GET|\$_POST|\$_COOKIE|\$_REQUEST|\$_FILES|\$_SESSION|\$_SERVER|\$_ENV",
+    }
 }
