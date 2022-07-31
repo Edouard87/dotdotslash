@@ -3,11 +3,16 @@ from os.path import exists
 from os import remove, getcwd
 import sys
 from pathlib import Path
+import http.cookiejar
 import requests
 import asyncio
 import aiohttp
+import threading
+from concurrent.futures import ThreadPoolExecutor
+import queue
+import re
 
-DEFAULT_URL_PATH = (Path(getcwd()) / "urls.txt").absolute()
+DEFAULT_URL_PATH: str = (Path(getcwd()) / "urls.txt").absolute()
 
 def create_links(
     url: str,
@@ -15,7 +20,7 @@ def create_links(
     depth: int = 0,
     force = False,
     file: str = DEFAULT_URL_PATH,
-    include: list = ["windows","linux","apache","php"]):
+    include: list = ["windows","linux","apache","php"]) -> dict:
     '''
     Create the links and cache them in a file for later use. This saves a bit of time
     though this operation is not particularily resource-intensive.
@@ -57,25 +62,54 @@ def create_links(
                         fullrewrite = url.replace(target, rewrite)
                         if fullrewrite not in duplicate:
                             # save to the file
-                            f.write(fullrewrite + '\n')
+                            f.write(fullrewrite + ',' + word + '\n')
                             duplicate.append(fullrewrite)
+    return WORDS
 
-async def call_endpoint(endpoint: str):
+def call_endpoint(
+    words: dict,
+    endpoint: str,
+    headers: dict[str, str],
+    cookies: http.cookiejar.CookieJar,
+    method: str,
+    output: queue.Queue):
     '''
     Sends a request to the provided endpoint and runs checks on the data.
+
+    :param endpoint: The enpoint to request.
+    :param headers:  The headers to pass to the provided endpoint.
+    :param method:   The `requests` method to pass to the provided endpoint.
     '''
-    async with aiohttp.ClientSession() as s:
-        pass
+    r = requests.request(
+        method, 
+        endpoint, 
+        headers = headers, 
+        cookies = cookies)
+    output.put({
+        "url": endpoint,
+        "vulnerable": re.findall(str(words[]))
+    })
+    
 
 
-def dispatch(file: str = DEFAULT_URL_PATH):
+def dispatch(
+    cookies: http.cookiejar.CookieJar = http.cookiejar.CookieJar,
+    file: str = DEFAULT_URL_PATH,
+    headers: dict = {},
+    method: str = "get"
+    ):
     '''
-    Dipatches the requests in the provided file. Makes use of coroutines to speed up the task.
+    Dipatches the requests in the provided file. Makes use of threads to speed up the task. Not using multiprocessing because
+    that would be overkill.
     :param: file - The file containing the URLs to disptach.
     '''
-    tasks = set()
-    with open(file) as f:
+    with open(file, "r") as f:
         f.read() # first line is depth. Not relevant here.
-        while (line := f.readline()):
-            tasks.add(asyncio.create_task(call_endpoint(line)))
+        count: int = 0
+        output = queue.Queue
+        with ThreadPoolExecutor() as tpe:
+            while (line := f.readline()):
+                tpe.submit(call_endpoint, line, headers, cookies, method, output)
+        while (not output.empty()):
+
 
