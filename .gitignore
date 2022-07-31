@@ -3,3 +3,4 @@ urls.txt
 __pycache__
 venv
 */__pycache__
+*.sqlite3

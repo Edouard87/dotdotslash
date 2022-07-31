@@ -1,4 +1,8 @@
 CREATE TABLE urls (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     url TEXT NOT NULL,
-    word TEXT NOT NULL
+    word TEXT NOT NULL,
+    depth INTEGER NOT NULL,
+    vulnerable INTEGER NOT NULL,
+    tested INTEGER NOT NULL
 )

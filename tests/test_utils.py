@@ -1,14 +1,27 @@
-from src.utils import create_links
+from src.utils import DotDotSlash
 from pathlib import Path
+import sqlite3
 
 def test_urls():
     TARGET = "file.txt"
     URL_TEMPLATE = "https://www.example.com/image?filename=%s"
     URL = URL_TEMPLATE % TARGET
-    URL_FILE = "urls.txt"
     DEPTH = 1
-    create_links(URL, TARGET, file=URL_FILE, force = True, depth=DEPTH)
-    with open(URL_FILE) as f:
-        assert str(DEPTH) == f.readline()[0],"The first line of the file must be the depth."
-        while (line := f.readline()):
-            assert line.startswith(URL_TEMPLATE % ''),"The urls do not start with the link."
+
+    dds = DotDotSlash(
+        url    = URL,
+        target = TARGET
+    )
+
+    cur = dds._connection.cursor()
+
+    urls = cur.execute("SELECT url, word, depth FROM urls").fetchall()
+
+    for url, word, depth in urls:
+        assert url.startswith(URL_TEMPLATE % '')
+        assert not url.startswith(URL)
+        assert url.endswith(word)
+        assert depth <= DEPTH
+    
+    dds.call_endpoint("http://www.google.com", "c:\\boot.ini")
+    
